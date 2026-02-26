@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "start:bot": "npx tsx src/bot/bot.ts",
+    "update-photos": "npx tsx scripts/update-photos.ts",
     "lint": "eslint"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "prisma": "^6.4.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
