@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String         @id @default(uuid())
+  telegramId     BigInt         @unique // Строго BigInt для TG ID
+  username       String?
+  firstName      String?
+  
+  // Анкета
+  gender         String?        // male, female
+  birthDate      String?        // Дата рождения (YYYY-MM-DD)
+  weight         Float?
+  height         Float?
+  goal           String?        // cut, bulk, maintain
+  injuries       String?        // Текстовое описание травм
+  experience     String?        // beginner, intermediate
+  // Настройки
+  notificationsEnabled Boolean    @default(true)
+  alwaysAddPool        Boolean    @default(false)
+  
+  // Связи (Relations)
+  workouts       Workout[]
+  nutritionLogs  NutritionLog[]
+  chatMessages   ChatMessage[]
+  notifications  Notification[]
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  message     String
+  type        String   // workout_reminder, nutrition_reminder, system
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Workout {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime      @default(now())
+  name        String        // Например "День ног"
+  isCompleted Boolean       @default(false)
+  isEarlyFinish Boolean       @default(false)
+  
+  // Связь с упражнениями в этой тренировке
+  exercises   ExerciseLog[]
+}
+
+model ExerciseLog {
+  id          String   @id @default(uuid())
+  workoutId   String
+  workout     Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  name        String   // Название упражнения
+  sets        Json     // Массив объектов: [{ reps: 10, weight: 50, completed: true }]
+  rpe         String?  // Оценка тяжести (1-10) или String (easy, normal, hard)
+  photoUrl    String?  // Ссылка на фото упражнения
+  orderIndex  Int      // Порядок упражнения в тренировке
+}
+
+model NutritionLog {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime @default(now())
+  mealType    String   // Завтрак, Обед, Ужин, Перекус
+  foodName    String
+  calories    Int
+  protein     Float
+  carbs       Float
+  fats        Float
+  photoUrl    String?  // Если было загружено фото
+}
+
+model ChatMessage {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        String   // 'user' | 'assistant' | 'system'
+  content     String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+}
+
+// Справочник упражнений для ручного выбора
+model Exercise {
+  id            String   @id @default(uuid())
+  name          String   // Название упражнения
+  muscleGroup   String   // Грудь, Спина, Ноги, Плечи, Руки, Пресс, Разминка
+  gender        String   // male, female, unisex
+  equipment     String   // bodyweight, barbell, dumbbell, machine, cardio
+  
+  // Дефолтные значения для быстрого старта
+  defaultSets   Int      @default(3)
+  defaultReps   Int      @default(10)
+  defaultWeight Float    @default(0)  // 0 = собственный вес
+  
+  // Кардио-специфичные поля (для беговой дорожки, эллипса и т.д.)
+  isCardio      Boolean  @default(false)
+  defaultSpeed  Float?   // км/ч (для беговой)
+  defaultIncline Float?  // % наклон  
+  defaultDuration Int?   // минуты
+  
+  photoUrl      String?  // Ссылка на фото упражнения
+  orderIndex    Int      @default(0) // Порядок внутри группы мышц
+}
