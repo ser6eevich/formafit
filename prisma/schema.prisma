@@ -12,6 +12,7 @@ model User {
   telegramId     BigInt         @unique // Строго BigInt для TG ID
   username       String?
   firstName      String?
+  photoUrl       String?
   
   // Анкета
   gender         String?        // male, female
