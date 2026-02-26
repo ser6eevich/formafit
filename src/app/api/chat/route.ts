@@ -36,12 +36,15 @@ export async function POST(request: Request) {
 
         if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-        // Сохраняем сообщение юзера через raw query (чтобы обойти заблокированный Prisma Client)
-        const userMsgId = Math.random().toString(36).substring(2, 15);
-        await prisma.$executeRawUnsafe(
-            "INSERT INTO ChatMessage (id, userId, role, content, imageUrl, createdAt) VALUES (?, ?, ?, ?, ?, ?)",
-            userMsgId, user.id, "user", message || "", imageBase64 || null, new Date()
-        );
+        // Сохраняем сообщение юзера через Prisma Client
+        await prisma.chatMessage.create({
+            data: {
+                userId: user.id,
+                role: "user",
+                content: message || "",
+                imageUrl: imageBase64 || null,
+            }
+        });
 
         const isWorkingOut = todayWorkout && !todayWorkout.isCompleted;
         const workoutContext = isWorkingOut
@@ -93,12 +96,15 @@ export async function POST(request: Request) {
 
         const aiRes = completion.choices[0].message.content || "Извини, бро, я немного завис.";
 
-        // Сохраняем ответ AI
-        const aiMsgId = Math.random().toString(36).substring(2, 15);
-        await prisma.$executeRawUnsafe(
-            "INSERT INTO ChatMessage (id, userId, role, content, imageUrl, createdAt) VALUES (?, ?, ?, ?, ?, ?)",
-            aiMsgId, user.id, "assistant", aiRes || "", null, new Date()
-        );
+        // Сохраняем ответ AI через Prisma Client
+        await prisma.chatMessage.create({
+            data: {
+                userId: user.id,
+                role: "assistant",
+                content: aiRes || "",
+                imageUrl: null,
+            }
+        });
 
         return NextResponse.json({ reply: aiRes }, { status: 200 });
     } catch (error: any) {
@@ -115,14 +121,14 @@ export async function GET(request: Request) {
         }
 
         const tgId = BigInt(tgIdStr);
-        // Получаем сообщения через raw query, чтобы увидеть imageUrl
-        const messages: any = await prisma.$queryRawUnsafe(
-            "SELECT * FROM ChatMessage WHERE userId IN (SELECT id FROM User WHERE telegramId = ?) ORDER BY createdAt ASC",
-            tgId.toString()
-        );
+        // Получаем сообщения (с сортировкой по дате старые -> новые)
+        const messages = await prisma.chatMessage.findMany({
+            where: { user: { telegramId: tgId } },
+            orderBy: { createdAt: "asc" }
+        });
 
-        const formatted = messages.map((msg: any) => ({
-            id: msg.id,
+        const formatted = messages.map((msg) => ({
+            id: msg.id.toString(),
             role: msg.role,
             content: msg.content,
             imageUrl: msg.imageUrl
