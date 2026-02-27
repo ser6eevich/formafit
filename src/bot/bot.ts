@@ -12,8 +12,8 @@ if (!token) {
 
 const bot = new Bot(token);
 
-// URL вашего развернутого приложения
-const WEB_APP_URL = "https://formafitai.ru";
+// URL вашего развернутого приложения (добавлен ?v=2 для принудительного сброса кэша в Telegram)
+const WEB_APP_URL = "https://formafitai.ru?v=2";
 
 // Обработчик команды /start
 bot.command("start", async (ctx) => {
