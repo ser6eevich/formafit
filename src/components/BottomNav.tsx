@@ -11,14 +11,19 @@ export function BottomNav() {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const check = () => setHidden(!!localStorage.getItem("activeWorkout"));
+    const check = () => {
+      const hasWorkout = !!localStorage.getItem("activeWorkout");
+      // Скрываем меню нижнего бара только если мы находимся на странице /workouts и есть активная тренировка
+      setHidden(hasWorkout);
+    };
     check();
     window.addEventListener("storage", check);
     const interval = setInterval(check, 500);
     return () => { window.removeEventListener("storage", check); clearInterval(interval); };
   }, []);
 
-  if (hidden || pathname?.startsWith("/chat")) return null;
+  const shouldHide = (hidden && pathname === "/workouts") || pathname?.startsWith("/chat");
+  if (shouldHide) return null;
 
   const navItems = [
     { label: "Профиль", icon: Home, path: "/" },
