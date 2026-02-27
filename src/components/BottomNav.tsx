@@ -29,7 +29,7 @@ export function BottomNav() {
 
   return (
     <div
-      className="fixed bottom-0 w-full left-0 right-0 bg-white/80 dark:bg-black/90 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 pb-[env(safe-area-inset-bottom)] z-[90] transition-colors"
+      className="fixed bottom-0 w-full left-0 right-0 bg-white/80 dark:bg-black/90 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 z-[90] transition-colors"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex justify-around items-center px-4 py-2.5 max-w-md mx-auto relative">
