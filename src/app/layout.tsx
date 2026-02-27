@@ -38,9 +38,18 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="antialiased min-h-[100dvh] bg-gray-50 dark:bg-black text-black dark:text-white">
+      <body
+        className="antialiased bg-gray-50 dark:bg-black text-black dark:text-white overflow-hidden overscroll-none"
+        style={{
+          height: "var(--tg-viewport-stable-height, 100vh)",
+          minHeight: "var(--tg-viewport-stable-height, 100vh)",
+        }}
+      >
         {/* max-w-md центрирует приложение на десктопных клиентах Telegram */}
-        <main className="max-w-md mx-auto min-h-[100dvh] flex flex-col relative w-full overflow-hidden">
+        <main
+          className="max-w-md mx-auto flex flex-col w-full relative overflow-hidden"
+          style={{ height: "var(--tg-viewport-stable-height, 100vh)" }}
+        >
           <Providers>
             <div className="flex-1 overflow-y-auto w-full relative">
               {children}
