@@ -27,10 +27,20 @@ export default function RootLayout({
     <html lang="ru" suppressHydrationWarning>
       <head>
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+        <Script id="tg-setup" strategy="afterInteractive">
+          {`
+            try {
+              if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+              }
+            } catch (e) {}
+          `}
+        </Script>
       </head>
-      <body className="antialiased min-h-screen bg-gray-50 dark:bg-black text-black dark:text-white">
+      <body className="antialiased min-h-[100dvh] bg-gray-50 dark:bg-black text-black dark:text-white">
         {/* max-w-md центрирует приложение на десктопных клиентах Telegram */}
-        <main className="max-w-md mx-auto min-h-[var(--tg-viewport-stable-height,100vh)] relative">
+        <main className="max-w-md mx-auto min-h-[var(--tg-viewport-stable-height,100dvh)] relative">
           <Providers>
             {children}
             <BottomNav />
