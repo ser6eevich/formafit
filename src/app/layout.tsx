@@ -15,7 +15,6 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -27,33 +26,12 @@ export default function RootLayout({
     <html lang="ru" suppressHydrationWarning>
       <head>
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
-        <Script id="tg-setup" strategy="afterInteractive">
-          {`
-            try {
-              if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.ready();
-                window.Telegram.WebApp.expand();
-              }
-            } catch (e) {}
-          `}
-        </Script>
       </head>
-      <body
-        className="antialiased bg-gray-50 dark:bg-black text-black dark:text-white overflow-hidden overscroll-none"
-        style={{
-          height: "var(--tg-viewport-stable-height, 100vh)",
-          minHeight: "var(--tg-viewport-stable-height, 100vh)",
-        }}
-      >
+      <body className="antialiased min-h-screen bg-gray-50 dark:bg-black text-black dark:text-white">
         {/* max-w-md центрирует приложение на десктопных клиентах Telegram */}
-        <main
-          className="max-w-md mx-auto flex flex-col w-full relative overflow-hidden"
-          style={{ height: "var(--tg-viewport-stable-height, 100vh)" }}
-        >
+        <main className="max-w-md mx-auto min-h-screen relative pb-20">
           <Providers>
-            <div className="flex-1 overflow-y-auto w-full relative">
-              {children}
-            </div>
+            {children}
             <BottomNav />
           </Providers>
         </main>

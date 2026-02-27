@@ -11,19 +11,14 @@ export function BottomNav() {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const check = () => {
-      const hasWorkout = !!localStorage.getItem("activeWorkout");
-      // Скрываем меню нижнего бара только если мы находимся на странице /workouts и есть активная тренировка
-      setHidden(hasWorkout);
-    };
+    const check = () => setHidden(!!localStorage.getItem("activeWorkout"));
     check();
     window.addEventListener("storage", check);
     const interval = setInterval(check, 500);
     return () => { window.removeEventListener("storage", check); clearInterval(interval); };
   }, []);
 
-  const shouldHide = (hidden && pathname === "/workouts") || pathname?.startsWith("/chat");
-  if (shouldHide) return null;
+  if (hidden || pathname?.startsWith("/chat")) return null;
 
   const navItems = [
     { label: "Профиль", icon: Home, path: "/" },
@@ -34,8 +29,7 @@ export function BottomNav() {
 
   return (
     <div
-      className="shrink-0 w-full left-0 right-0 bg-white/80 dark:bg-black/90 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 z-[90] transition-colors"
-      style={{ paddingBottom: "var(--safe-bottom)" }}
+      className="fixed bottom-0 w-full left-0 right-0 bg-white/80 dark:bg-black/90 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 pb-[env(safe-area-inset-bottom)] z-[90] transition-colors"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex justify-around items-center px-4 py-2.5 max-w-md mx-auto relative">
