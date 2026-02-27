@@ -752,7 +752,7 @@ export default function WorkoutsPage() {
                             </AnimatePresence>
 
                             {/* Видео-зона (теперь фото) */}
-                            <div className="mx-6 mt-2 rounded-3xl bg-gray-50/50 dark:bg-[#1c1c1e] min-h-[200px] flex items-center justify-center overflow-hidden relative border border-gray-100 dark:border-gray-800/50">
+                            <div className="mx-auto w-[65%] mt-2 rounded-3xl bg-gray-50/50 dark:bg-[#1c1c1e] min-h-[130px] flex items-center justify-center overflow-hidden relative border border-gray-100 dark:border-gray-800/50">
                                 {exercise.photoUrl ? (
                                     <motion.img
                                         initial={{ opacity: 0 }}
@@ -760,6 +760,8 @@ export default function WorkoutsPage() {
                                         key={exercise.photoUrl}
                                         src={encodeURI(exercise.photoUrl)}
                                         alt={exercise.name}
+                                        fetchPriority="high"
+                                        loading="eager"
                                         className="w-full h-auto block"
                                     />
                                 ) : (
@@ -771,7 +773,7 @@ export default function WorkoutsPage() {
                             </div>
 
                             {/* Информация */}
-                            <div className="px-6 mt-5 flex-1 flex flex-col">
+                            <div className="px-6 mt-4 flex-1 flex flex-col">
                                 <h2 className="text-[24px] font-bold tracking-tight leading-tight">{exercise.name}</h2>
 
                                 {isCardioEx ? (
@@ -794,7 +796,7 @@ export default function WorkoutsPage() {
                                         ) : null}
                                     </div>
                                 ) : (
-                                    <div className="mt-5 flex flex-col gap-1.5">
+                                    <div className="mt-3 flex flex-col gap-1.5">
                                         {exercise.sets.map((set, i) => (
                                             <div key={i} className="flex justify-between items-center py-3 px-4 rounded-xl bg-gray-50 dark:bg-[#1c1c1e]">
                                                 <span className="text-[14px] text-gray-400 font-medium tabular-nums">Подход {i + 1}</span>
@@ -806,7 +808,7 @@ export default function WorkoutsPage() {
 
                                 {/* RPE */}
                                 {!exercise.rpe && (
-                                    <div className="mt-auto mb-4">
+                                    <div className="mt-8 mb-6">
                                         <button onClick={() => handleRpeAndNext(exercise.id, "done")}
                                             className="w-full p-4 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-semibold text-[16px] flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
                                             <CheckCircle className="w-5 h-5" strokeWidth={1.5} /> Выполнено
