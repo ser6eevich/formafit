@@ -18,7 +18,7 @@ export function BottomNav() {
     return () => { window.removeEventListener("storage", check); clearInterval(interval); };
   }, []);
 
-  if (hidden || pathname?.startsWith("/chat")) return null;
+  if ((hidden && pathname === "/workouts") || pathname?.startsWith("/chat")) return null;
 
   const navItems = [
     { label: "Профиль", icon: Home, path: "/" },
