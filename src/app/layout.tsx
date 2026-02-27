@@ -40,9 +40,11 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-[100dvh] bg-gray-50 dark:bg-black text-black dark:text-white">
         {/* max-w-md центрирует приложение на десктопных клиентах Telegram */}
-        <main className="max-w-md mx-auto min-h-[var(--tg-viewport-stable-height,100dvh)] relative">
+        <main className="max-w-md mx-auto min-h-[100dvh] flex flex-col relative w-full overflow-hidden">
           <Providers>
-            {children}
+            <div className="flex-1 overflow-y-auto w-full relative">
+              {children}
+            </div>
             <BottomNav />
           </Providers>
         </main>
