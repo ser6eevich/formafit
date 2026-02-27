@@ -46,7 +46,6 @@ export async function POST(request: Request) {
             experience,
             notificationsEnabled,
             alwaysAddPool,
-            photoUrl,
         } = body;
 
         const telegramIdBigInt = BigInt(tgIdStr);
@@ -56,7 +55,6 @@ export async function POST(request: Request) {
             update: {
                 username,
                 firstName,
-                photoUrl,
                 gender,
                 birthDate,
                 weight: weight ? Number(weight) : undefined,
@@ -71,7 +69,6 @@ export async function POST(request: Request) {
                 telegramId: telegramIdBigInt,
                 username,
                 firstName,
-                photoUrl,
                 gender,
                 birthDate,
                 weight: weight ? Number(weight) : null,

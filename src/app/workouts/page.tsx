@@ -10,7 +10,6 @@ import {
 import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 /* ─── Типы ─── */
 type ExerciseSet = { reps: number; weight: number; duration?: string; speed?: number; incline?: number };
@@ -743,22 +742,14 @@ export default function WorkoutsPage() {
                             {/* Видео-зона (теперь фото) */}
                             <div className="mx-6 mt-2 rounded-3xl bg-gray-50/50 dark:bg-[#1c1c1e] min-h-[200px] flex items-center justify-center overflow-hidden relative border border-gray-100 dark:border-gray-800/50">
                                 {exercise.photoUrl ? (
-                                    <motion.div
+                                    <motion.img
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         key={exercise.photoUrl}
-                                        className="w-full"
-                                    >
-                                        <Image
-                                            src={encodeURI(exercise.photoUrl)}
-                                            alt={exercise.name}
-                                            width={600}
-                                            height={400}
-                                            priority
-                                            className="w-full h-auto block object-cover"
-                                            sizes="(max-width: 768px) 100vw, 400px"
-                                        />
-                                    </motion.div>
+                                        src={encodeURI(exercise.photoUrl)}
+                                        alt={exercise.name}
+                                        className="w-full h-auto block"
+                                    />
                                 ) : (
                                     <div className="text-center">
                                         <Dumbbell className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto" strokeWidth={1} />
@@ -803,7 +794,7 @@ export default function WorkoutsPage() {
 
                                 {/* RPE */}
                                 {!exercise.rpe && (
-                                    <div className="mt-auto mb-6">
+                                    <div className="mt-auto mb-4">
                                         <button onClick={() => handleRpeAndNext(exercise.id, "done")}
                                             className="w-full p-4 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-semibold text-[16px] flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
                                             <CheckCircle className="w-5 h-5" strokeWidth={1.5} /> Выполнено
@@ -815,7 +806,7 @@ export default function WorkoutsPage() {
                                 {exercise.rpe && isLast && (
                                     <motion.button initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                                         onClick={() => finishMutation.mutate(false)} disabled={finishMutation.isPending}
-                                        className="mt-auto mb-6 w-full p-4 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-semibold text-[16px] flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-50">
+                                        className="mt-auto mb-4 w-full p-4 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-semibold text-[16px] flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-50">
                                         {finishMutation.isPending ? "Сохраняем..." : "Завершить тренировку"}
                                     </motion.button>
                                 )}
