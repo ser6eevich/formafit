@@ -29,7 +29,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen bg-gray-50 dark:bg-black text-black dark:text-white">
         {/* max-w-md центрирует приложение на десктопных клиентах Telegram */}
-        <main className="max-w-md mx-auto min-h-screen relative pb-20">
+        <main className="max-w-md mx-auto min-h-[var(--tg-viewport-stable-height,100vh)] relative">
           <Providers>
             {children}
             <BottomNav />
