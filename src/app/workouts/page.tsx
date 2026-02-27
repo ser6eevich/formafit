@@ -522,7 +522,7 @@ export default function WorkoutsPage() {
 
                     return (
                         <motion.div key={currentExIndex} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }}
-                            className="flex flex-col h-screen pb-4">
+                            className="flex flex-col h-screen pb-4 overflow-y-auto">
 
                             {/* Toast дубликата */}
                             <AnimatePresence>
@@ -741,7 +741,7 @@ export default function WorkoutsPage() {
                             </AnimatePresence>
 
                             {/* Видео-зона (теперь фото) */}
-                            <div className="mx-6 mt-2 rounded-3xl bg-gray-50/50 dark:bg-[#1c1c1e] min-h-[200px] flex items-center justify-center overflow-hidden relative border border-gray-100 dark:border-gray-800/50 aspect-[4/3]">
+                            <div className="mx-6 mt-2 shrink-0 rounded-3xl bg-gray-50/50 dark:bg-[#1c1c1e] min-h-[200px] flex items-center justify-center overflow-hidden relative border border-gray-100 dark:border-gray-800/50 aspect-[4/3]">
                                 {exercise.photoUrl ? (
                                     <motion.div
                                         initial={{ opacity: 0 }}
