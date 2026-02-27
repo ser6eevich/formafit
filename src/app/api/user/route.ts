@@ -46,6 +46,7 @@ export async function POST(request: Request) {
             experience,
             notificationsEnabled,
             alwaysAddPool,
+            photoUrl,
         } = body;
 
         const telegramIdBigInt = BigInt(tgIdStr);
@@ -64,6 +65,7 @@ export async function POST(request: Request) {
                 experience,
                 notificationsEnabled: notificationsEnabled !== undefined ? Boolean(notificationsEnabled) : undefined,
                 alwaysAddPool: alwaysAddPool !== undefined ? Boolean(alwaysAddPool) : undefined,
+                photoUrl,
             },
             create: {
                 telegramId: telegramIdBigInt,
@@ -78,6 +80,7 @@ export async function POST(request: Request) {
                 experience,
                 notificationsEnabled: notificationsEnabled !== undefined ? Boolean(notificationsEnabled) : true,
                 alwaysAddPool: alwaysAddPool !== undefined ? Boolean(alwaysAddPool) : false,
+                photoUrl,
             },
         });
 

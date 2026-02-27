@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dumbbell, Utensils, Home, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -18,7 +19,31 @@ export function BottomNav() {
     return () => { window.removeEventListener("storage", check); clearInterval(interval); };
   }, []);
 
-  if ((hidden && pathname === "/workouts") || pathname?.startsWith("/chat")) return null;
+  const [tgUser, setTgUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const WebApp = require("@twa-dev/sdk").default;
+      setTgUser(WebApp.initDataUnsafe?.user || null);
+    }
+  }, []);
+
+  const telegramId = tgUser?.id?.toString() || "";
+
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["user", telegramId],
+    queryFn: async () => {
+      const res = await fetch(`/api/user`, { headers: { "x-telegram-id": telegramId } });
+      if (!res.ok) return null;
+      return (await res.json()).user;
+    },
+    enabled: !!telegramId,
+  });
+
+  // Скрываем, если тренировка активна (на странице спорт) ИЛИ если это окно чата ИЛИ если юзер еще не прошел регистрацию (анкету)
+  if ((hidden && pathname === "/workouts") || pathname?.startsWith("/chat") || (!user && !isLoading)) {
+      return null;
+  }
 
   const navItems = [
     { label: "Профиль", icon: Home, path: "/" },

@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         const { notificationId } = await request.json();
 
         await prisma.notification.update({
-            where: { id: notificationId },
+            where: { id: Number(notificationId) },
             data: { isRead: true }
         });
 

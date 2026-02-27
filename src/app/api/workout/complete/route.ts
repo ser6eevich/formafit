@@ -23,15 +23,15 @@ export async function POST(request: Request) {
             // Разделяем: существующие обновляем, динамические создаём
             for (const log of exercises as any[]) {
                 const finalRpe = log.rpe || (isEarlyFinish ? "none" : "done");
-                if (log.id && !log.id.startsWith("pool-") && !log.id.startsWith("added-")) {
+                if (log.id && !String(log.id).startsWith("pool-") && !String(log.id).startsWith("added-")) {
                     await tx.exerciseLog.update({
-                        where: { id: log.id },
+                        where: { id: Number(log.id) },
                         data: { rpe: finalRpe },
                     });
                 } else {
                     await tx.exerciseLog.create({
                         data: {
-                            workoutId,
+                            workoutId: Number(workoutId),
                             name: log.name,
                             sets: log.sets || [],
                             rpe: finalRpe,
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
             // Закрываем тренировку
             return tx.workout.update({
-                where: { id: workoutId },
+                where: { id: Number(workoutId) },
                 data: {
                     isCompleted: true,
                     isEarlyFinish: !!isEarlyFinish
