@@ -201,6 +201,13 @@ export default function WorkoutsPage() {
             queryClient.invalidateQueries({ queryKey: ["user", telegramIdStr] });
             queryClient.invalidateQueries({ queryKey: ["workoutHistory"] });
         },
+        onError: () => {
+            // Если API упал (например, из-за плохой сети), всё равно сбрасываем тренировку, чтобы она не "зависла" навечно.
+            setWorkout(null);
+            clearWorkoutStorage();
+            setScreen("start");
+            alert("Тренировка завершена, но не удалось сохранить логи в базу.");
+        }
     });
 
     const handleRpeAndNext = (exerciseId: string, rpe: string) => {
@@ -537,7 +544,12 @@ export default function WorkoutsPage() {
                                     <button onClick={() => setShowExerciseList(true)} className="flex items-center gap-1.5 text-black/40 dark:text-white/40 text-[13px] font-medium active:text-black dark:active:text-white transition-colors">
                                         <List className="w-4 h-4" /> План
                                     </button>
-                                    <span className="text-[13px] font-medium text-gray-400 tabular-nums">{currentExIndex + 1} из {workout.exercises.length}</span>
+
+                                    <button onClick={() => { setWorkout(null); clearWorkoutStorage(); setScreen("start"); }}
+                                        className="text-[11px] font-bold text-red-500/50 uppercase tracking-widest active:opacity-60 transition-opacity">
+                                        Сброс
+                                    </button>
+
                                     <button onClick={() => { setShowAddExercise(true); loadCatalog(); }} className="flex items-center gap-1 text-blue-500 text-[13px] font-medium active:opacity-60 transition-opacity">
                                         <Plus className="w-4 h-4" /> Добавить
                                     </button>
